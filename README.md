@@ -1,2 +1,2 @@
 # otpgen
-Library to generate OTP (TOTP/HOTP) codes.
+Library to generate TOTP/HOTP codes
