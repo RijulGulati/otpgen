@@ -21,7 +21,7 @@ import (
 type TOTP struct {
 	Secret    string // Secret key (required)
 	Digits    int    // OTP digit count (default: 6)
-	Algorithm string // OTP Algorithm ("SHA1" or "SHA256" or "SHA512")
+	Algorithm string // OTP Algorithm ("SHA1" or "SHA256" or "SHA512") (default: SHA1)
 	Period    int64  // Period for which OTP is valid (seconds) (default: 30)
 	UnixTime  int64  // (Optional) Unix Timestamp (default: Current unix timestamp)
 }
