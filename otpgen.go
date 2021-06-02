@@ -34,7 +34,7 @@ type HOTP struct {
 	Counter int64  // Counter value (default: 0)
 }
 
-// Generates TOTP code and returns OTP as string and any error encountered.
+// Generate TOTP code and returns OTP as string and any error encountered.
 func (totp *TOTP) Generate() (string, error) {
 	var T0 int64 = 0
 	var currentUnixTime int64
@@ -66,7 +66,7 @@ func (totp *TOTP) Generate() (string, error) {
 	return generateOTP(totp.Secret, currentUnixTime, totp.Digits, totp.Algorithm)
 }
 
-// Generates HOTP code and returns OTP as string and any error encountered.
+// Generate HOTP code and returns OTP as string and any error encountered.
 func (hotp *HOTP) Generate() (string, error) {
 
 	if hotp.Secret == "" {
