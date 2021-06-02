@@ -1,14 +1,16 @@
 # otpgen
 Library to generate TOTP/HOTP codes
 
-# Installation
-```
-$ go get -u github.com/grijul/otpgen
+## Installation
+
+```sh
+go get -u github.com/grijul/otpgen
 ```
 
-# Usage
+## Usage
 Here is a sample demonstration
-```
+
+```go
 import (
 	"fmt"
 
