@@ -36,12 +36,26 @@ func TestTOTP(t *testing.T) {
 		{TOTP: TOTP{Algorithm: "SHA1", Period: 30, UnixTime: 20000000000, Secret: "12345678901234567890", Digits: 8}, Output: "65353130"},
 		{TOTP: TOTP{Algorithm: "SHA256", Period: 30, UnixTime: 20000000000, Secret: "12345678901234567890123456789012", Digits: 8}, Output: "77737706"},
 		{TOTP: TOTP{Algorithm: "SHA512", Period: 30, UnixTime: 20000000000, Secret: "1234567890123456789012345678901234567890123456789012345678901234", Digits: 8}, Output: "47863826"},
+
+		{TOTP: TOTP{Algorithm: "SHA1", Period: 0, UnixTime: 20000000000, Secret: "12345678901234567890", Digits: 8}, Output: "65353130"},
+		{TOTP: TOTP{Algorithm: "", Period: 30, UnixTime: 20000000000, Secret: "12345678901234567890", Digits: 8}, Output: "65353130"},
+		{TOTP: TOTP{Algorithm: "SHA1", Period: 30, UnixTime: 20000000000, Secret: "12345678901234567890", Digits: 0}, Output: "353130"},
+		{TOTP: TOTP{Algorithm: "SHA1", Period: 30, UnixTime: 20000000000, Secret: "", Digits: 8}, Output: "no secret key provided"},
+		{TOTP: TOTP{Algorithm: "SHA1", Period: 30, UnixTime: 20000000000, Secret: "INVALID", Digits: 8}, Output: "bad secret key"},
+		{TOTP: TOTP{Algorithm: "SHA1024", Period: 0, UnixTime: 20000000000, Secret: "12345678901234567890", Digits: 8}, Output: "invalid algorithm. Please use any one of SHA1/SHA256/SHA512"},
 	}
 	for _, test := range testcases {
-		test.Secret = base32.StdEncoding.EncodeToString([]byte(test.Secret)) // Convert secret to base32
+		if test.Secret != "INVALID" {
+			test.Secret = base32.StdEncoding.EncodeToString([]byte(test.Secret)) // Convert secret to base32
+		}
 		otp, err := test.Generate()
-		if otp != test.Output || err != nil {
-			t.Errorf("Expected: %v, Received: %v\n", test.Output, otp)
+
+		if err != nil {
+			if err.Error() != test.Output {
+				t.Errorf("Expected error: %v, Received error: %v\n", test.Output, err.Error())
+			}
+		} else if otp != test.Output {
+			t.Errorf("Expected OTP: %v, Received OTP: %v\n", test.Output, otp)
 		}
 	}
 }
@@ -58,13 +72,19 @@ func TestHOTP(t *testing.T) {
 		{HOTP: HOTP{Secret: "12345678901234567890", Digits: 6, Counter: 7}, Output: "162583"},
 		{HOTP: HOTP{Secret: "12345678901234567890", Digits: 6, Counter: 8}, Output: "399871"},
 		{HOTP: HOTP{Secret: "12345678901234567890", Digits: 6, Counter: 9}, Output: "520489"},
+		{HOTP: HOTP{Secret: "", Digits: 6, Counter: 9}, Output: "no secret key provided"},
+		{HOTP: HOTP{Secret: "12345678901234567890", Digits: 0, Counter: 9}, Output: "520489"},
 	}
 
 	for _, test := range testcases {
 		test.Secret = base32.StdEncoding.EncodeToString([]byte(test.Secret)) // Convert secret to base32
 		otp, err := test.Generate()
-		if otp != test.Output || err != nil {
-			t.Errorf("Expected: %v, Received: %v\n", test.Output, otp)
+		if err != nil {
+			if err.Error() != test.Output {
+				t.Errorf("Expected error: %v, Received error: %v\n", test.Output, err.Error())
+			}
+		} else if otp != test.Output {
+			t.Errorf("Expected OTP: %v, Received OTP: %v\n", test.Output, otp)
 		}
 	}
 }
