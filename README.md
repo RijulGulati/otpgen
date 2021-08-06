@@ -11,6 +11,8 @@ go get -u github.com/grijul/otpgen
 Here is a sample demonstration
 
 ```go
+package main
+
 import (
 	"fmt"
 
