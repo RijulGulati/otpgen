@@ -21,7 +21,8 @@ import (
 type TOTP struct {
 	Secret    string // Secret key (required)
 	Digits    int    // OTP digit count (default: 6)
-	Algorithm string // OTP Algorithm ("SHA1" or "SHA256" or "SHA512") (default: SHA1)
+	// SHA1 is accepted in OTP Algorithm, but it would be better to use more secure algorithms as the default
+	Algorithm string // OTP Algorithm ("SHA1" or "SHA256" or "SHA512") (default: SHA256)
 	Period    int64  // Period for which OTP is valid (seconds) (default: 30)
 	UnixTime  int64  // (Optional) Unix Timestamp (default: Current unix timestamp)
 }
@@ -48,7 +49,7 @@ func (totp *TOTP) Generate() (string, error) {
 	}
 
 	if totp.Algorithm == "" {
-		totp.Algorithm = "SHA1"
+		totp.Algorithm = "SHA256"
 	}
 
 	if totp.Period == 0 {
